@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>React Editable Table</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script>
+    const { useState } = React;
+
+    function EditableTable() {
+      // Sample data
+      const initialData = [
+        { id: 1, name: "John Doe", age: 30, email: "john@example.com" },
+        { id: 2, name: "Jane Smith", age: 25, email: "jane@example.com" }
+      ];
+
+      const [data, setData] = useState(initialData);
+
+      // Handle input changes
+      const handleChange = (id, field, value) => {
+        setData(prevData => 
+          prevData.map(row => row.id === id ? { ...row, [field]: value } : row)
+        );
+      };
+
+      // Handle "Submit" button click
+      const handleSubmit = () => {
+        // The data is ready to be sent to an API
+        console.log("Data to be posted to API:", data);
+        alert("Data is ready to be posted to the API!");
+      };
+
+      return React.createElement(
+        "div",
+        null,
+        React.createElement(
+          "table",
+          { border: "1", style: { width: "100%", textAlign: "left" } },
+          React.createElement(
+            "thead",
+            null,
+            React.createElement(
+              "tr",
+              null,
+              React.createElement("th", null, "Name"),
+              React.createElement("th", null, "Age"),
+              React.createElement("th", null, "Email")
+            )
+          ),
+          React.createElement(
+            "tbody",
+            null,
+            data.map(row =>
+              React.createElement(
+                "tr",
+                { key: row.id },
+                React.createElement("td", null,
+                  React.createElement("input", {
+                    type: "text",
+                    value: row.name,
+                    onChange: e => handleChange(row.id, "name", e.target.value)
+                  })
+                ),
+                React.createElement("td", null,
+                  React.createElement("input", {
+                    type: "number",
+                    value: row.age,
+                    onChange: e => handleChange(row.id, "age", e.target.value)
+                  })
+                ),
+                React.createElement("td", null,
+                  React.createElement("input", {
+                    type: "email",
+                    value: row.email,
+                    onChange: e => handleChange(row.id, "email", e.target.value)
+                  })
+                )
+              )
+            )
+          )
+        ),
+        React.createElement("button", { onClick: handleSubmit }, "Submit")
+      );
+    }
+
+    // Render the EditableTable component
+    ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(EditableTable));
+  </script>
+</body>
+</html>
